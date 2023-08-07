@@ -1,17 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using Tekla.Structures.Model;
 using Point = Tekla.Structures.Geometry3d.Point;
 using Tekla.Structures.Model.UI;
-using System.Drawing.Text;
-using static Tekla.Structures.Model.Position;
+
 
 namespace tekla_api3
 {
@@ -19,6 +11,8 @@ namespace tekla_api3
 
     {
         private Position.PlaneEnum planeEnum; // global variable
+        private Position.DepthEnum depthEnum;
+        private Position.RotationEnum rotationEnum;
         
         public Form1()
         {
@@ -52,10 +46,11 @@ namespace tekla_api3
                 mybeam.AssemblyNumber.StartNumber = Convert.ToInt32(textBox6.Text);
 
                 //onplane
-                mybeam.Position.Depth = Position.DepthEnum.BEHIND;
-                mybeam.Position.Rotation = Position.RotationEnum.TOP;
-
+                //mybeam.Position.Depth = Position.DepthEnum.BEHIND;
+                mybeam.Position.Depth = UpdateDepth(comboBox2.SelectedIndex);
+                //mybeam.Position.Rotation = Position.RotationEnum.TOP;
                 mybeam.Position.Plane = UpdatePlane(comboBox1.SelectedIndex);
+                mybeam.Position.Rotation = UpdateRotation(comboBox3.SelectedIndex);
 
                 mybeam.Insert();
                 model.CommitChanges();
@@ -77,6 +72,38 @@ namespace tekla_api3
                 default:
                     return planeEnum = Position.PlaneEnum.MIDDLE;
 
+            }
+        }
+
+        private Position.DepthEnum UpdateDepth(int comboBox2)
+        {
+            switch(comboBox2)
+            {
+                case 0:
+                    return depthEnum = Position.DepthEnum.MIDDLE;
+                case 1:
+                    return depthEnum = Position.DepthEnum.FRONT;
+                case 2:
+                    return depthEnum = Position.DepthEnum.BEHIND;
+                default:
+                    return depthEnum = Position.DepthEnum.BEHIND;
+            }
+        }
+
+        private Position.RotationEnum UpdateRotation(int comboBox3)
+        {
+            switch (comboBox3)
+            {
+                case 1:
+                    return rotationEnum = Position.RotationEnum.BACK;
+                case 2:
+                    return rotationEnum = Position.RotationEnum.FRONT;
+                case 3:
+                    return rotationEnum = Position.RotationEnum.BELOW;
+                case 4:
+                    return rotationEnum = Position.RotationEnum.TOP;
+                default:
+                    return rotationEnum = Position.RotationEnum.TOP;
             }
         }
 
